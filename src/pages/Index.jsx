@@ -10,13 +10,19 @@ const Index = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      Papa.parse(file, {
-        header: true,
-        complete: (results) => {
-          setHeaders(Object.keys(results.data[0]));
-          setData(results.data);
-        },
-      });
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target.result;
+        Papa.parse(text, {
+          header: true,
+          complete: (results) => {
+            setHeaders(Object.keys(results.data[0]));
+            setData(results.data);
+          },
+          encoding: "UTF-8"
+        });
+      };
+      reader.readAsText(file, "UTF-8");
     }
   };
 
